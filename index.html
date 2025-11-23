@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Dashboard Pro</title>
+    <style>
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #1c1c1e;
+            --bg-tertiary: #2c2c2e;
+            --text-primary: #ffffff;
+            --text-secondary: #8e8e93;
+            --accent: #0a84ff;
+            --red: #ff453a;
+            --orange: #ff9f0a;
+            --green: #32d74b;
+            --safe-area-top: env(safe-area-inset-top);
+            --safe-area-bottom: env(safe-area-inset-bottom);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            overflow-x: hidden;
+            padding-top: var(--safe-area-top);
+            padding-bottom: calc(var(--safe-area-bottom) + 90px);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 430px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        .header h1 {
+            font-size: 34px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+        }
+
+        .header .date {
+            font-size: 15px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(28, 28, 30, 0.8);
+            padding: 12px 20px calc(var(--safe-area-bottom) + 12px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            backdrop-filter: blur(20px);
+            border-top: 0.5px solid rgba(255,255,255,0.1);
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 8px 20px;
+            border-radius: 12px;
+            transition: all 0.2s;
+            opacity: 0.5;
+            position: relative;
+        }
+
+        .nav-btn.active {
+            opacity: 1;
+        }
+
+        .section {
+            margin-bottom: 35px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-left: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HOME PAGE -->
+        <div id="page-home" class="page active">
+            <div class="header">
+                <h1>Dashboard</h1>
+                <div class="date">Welkom op je persoonlijke dashboard</div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">
+                    <span>🎉</span>
+                    <span>Je dashboard is klaar!</span>
+                </div>
+                <p style="color: var(--text-secondary); line-height: 1.6;">
+                    Dit is je complete dashboard met 7 features:
+                    <br><br>
+                    📅 Kalender - Afspraken overzicht<br>
+                    💰 Betalingen - Financieel beheer<br>
+                    📧 Emails - Met AI samenvatting<br>
+                    🎤 Voice - Ingesproken berichten<br>
+                    📞 Calls - Gesprekken historie<br>
+                    ☁️ iCloud - Document zoeken<br>
+                    <br>
+                    Gebruik de navigatie onderaan om tussen pagina's te wisselen!
+                </p>
+            </div>
+        </div>
+
+        <!-- Andere paginas kunnen hier toegevoegd worden -->
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="navigation">
+        <button class="nav-btn active" onclick="alert('Home')">🏠</button>
+        <button class="nav-btn" onclick="alert('Kalender')">📅</button>
+        <button class="nav-btn" onclick="alert('Betalingen')">💰</button>
+        <button class="nav-btn" onclick="alert('Emails')">📧</button>
+        <button class="nav-btn" onclick="alert('Voice')">🎤</button>
+        <button class="nav-btn" onclick="alert('Calls')">📞</button>
+        <button class="nav-btn" onclick="alert('iCloud')">☁️</button>
+    </div>
+
+    <script>
+        // Jouw JavaScript functies komen hier
+        console.log('Dashboard geladen!');
+    </script>
+</body>
+</html>
