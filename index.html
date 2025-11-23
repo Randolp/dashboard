@@ -5,20 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Dashboard Pro</title>
+    <title>Dashboard - Overzicht</title>
     <style>
         :root {
             --bg-primary: #000000;
             --bg-secondary: #1c1c1e;
-            --bg-tertiary: #2c2c2e;
             --text-primary: #ffffff;
             --text-secondary: #8e8e93;
             --accent: #0a84ff;
+            --green: #32d74b;
             --red: #ff453a;
             --orange: #ff9f0a;
-            --green: #32d74b;
-            --safe-area-top: env(safe-area-inset-top);
-            --safe-area-bottom: env(safe-area-inset-bottom);
         }
 
         * {
@@ -29,18 +26,16 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.5;
-            overflow-x: hidden;
-            padding-top: var(--safe-area-top);
-            padding-bottom: calc(var(--safe-area-bottom) + 90px);
+            padding-bottom: 100px;
             -webkit-font-smoothing: antialiased;
         }
 
         .container {
-            max-width: 430px;
+            max-width: 600px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -51,75 +46,170 @@
         }
 
         .header h1 {
-            font-size: 34px;
+            font-size: 32px;
             font-weight: 700;
-            margin-bottom: 5px;
-            letter-spacing: -0.5px;
+            margin-bottom: 8px;
         }
 
         .header .date {
-            font-size: 15px;
+            font-size: 14px;
             color: var(--text-secondary);
-            font-weight: 400;
         }
 
-        .page {
+        /* Sections */
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 8px;
+        }
+
+        .stats-row::-webkit-scrollbar {
             display: none;
-            animation: fadeIn 0.3s ease;
         }
 
-        .page.active {
-            display: block;
+        .stat-box {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 16px;
+            min-width: 140px;
+            flex-shrink: 0;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 4px;
         }
 
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Simple List */
+        .list {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .list-item {
+            padding: 16px;
+            border-bottom: 0.5px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-item-left {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .list-item-title {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .list-item-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .list-item-badge {
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .badge-urgent { background: rgba(255, 69, 58, 0.2); color: var(--red); }
+        .badge-soon { background: rgba(255, 159, 10, 0.2); color: var(--orange); }
+        .badge-done { background: rgba(50, 215, 75, 0.2); color: var(--green); }
+        .badge-info { background: rgba(10, 132, 255, 0.2); color: var(--accent); }
+
+        /* Navigation */
         .navigation {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(28, 28, 30, 0.8);
-            padding: 12px 20px calc(var(--safe-area-bottom) + 12px);
+            background: rgba(28, 28, 30, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 12px 20px calc(env(safe-area-inset-bottom) + 12px);
             display: flex;
             justify-content: space-around;
-            align-items: center;
-            backdrop-filter: blur(20px);
             border-top: 0.5px solid rgba(255,255,255,0.1);
-            z-index: 1000;
         }
 
         .nav-btn {
             background: none;
             border: none;
-            font-size: 28px;
-            cursor: pointer;
-            padding: 8px 20px;
-            border-radius: 12px;
-            transition: all 0.2s;
+            font-size: 24px;
+            padding: 8px;
             opacity: 0.5;
-            position: relative;
+            cursor: pointer;
         }
 
         .nav-btn.active {
             opacity: 1;
         }
 
-        .section {
-            margin-bottom: 35px;
+        .page {
+            display: none;
         }
 
-        .section-title {
-            font-size: 22px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding-left: 4px;
+        .page.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+            margin: 24px 0;
+        }
+
+        /* Empty State */
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            opacity: 0.5;
         }
     </style>
 </head>
@@ -129,46 +219,428 @@
         <div id="page-home" class="page active">
             <div class="header">
                 <h1>Dashboard</h1>
-                <div class="date">Welkom op je persoonlijke dashboard</div>
+                <div class="date">Dinsdag, 23 november 2025</div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Afspraken</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">Te betalen</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Emails</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Gemist</div>
+                </div>
+            </div>
+
+            <!-- Vandaag -->
+            <div class="section">
+                <div class="section-title">
+                    <span>📅</span>
+                    <span>Vandaag</span>
+                </div>
+                <div class="list">
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">09:00 - Team meeting</div>
+                            <div class="list-item-subtitle">Kantoor • 1 uur</div>
+                        </div>
+                        <div class="list-item-badge badge-info">Vandaag</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">14:00 - Lunch client</div>
+                            <div class="list-item-subtitle">Restaurant De Plantage</div>
+                        </div>
+                        <div class="list-item-badge badge-info">Vandaag</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">16:30 - Sportschool</div>
+                            <div class="list-item-subtitle">Basic-Fit • 1.5 uur</div>
+                        </div>
+                        <div class="list-item-badge badge-info">Vandaag</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Te Betalen -->
+            <div class="section">
+                <div class="section-title">
+                    <span>💰</span>
+                    <span>Te Betalen</span>
+                </div>
+                <div class="list">
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">Huur november - €1.250</div>
+                            <div class="list-item-subtitle">NL91ABNA0417164300 • Vervalt 12 nov</div>
+                        </div>
+                        <div class="list-item-badge badge-urgent">Urgent</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">Energie - €125,50</div>
+                            <div class="list-item-subtitle">NL44INGB0001234567 • Vervalt 15 nov</div>
+                        </div>
+                        <div class="list-item-badge badge-soon">Binnenkort</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nieuwe Emails -->
+            <div class="section">
+                <div class="section-title">
+                    <span>📧</span>
+                    <span>Nieuwe Emails (5)</span>
+                </div>
+                <div class="list">
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">📦 Pakket onderweg - PostNL</div>
+                            <div class="list-item-subtitle">Vandaag 09:23 • Bezorging morgen</div>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">💳 Factuur - KPN</div>
+                            <div class="list-item-subtitle">Vandaag 14:15 • €65,00</div>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">🏦 Maandoverzicht - ING</div>
+                            <div class="list-item-subtitle">Gisteren 08:00 • Oktober</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gemiste Oproepen -->
+            <div class="section">
+                <div class="section-title">
+                    <span>📞</span>
+                    <span>Gemiste Oproepen (3)</span>
+                </div>
+                <div class="list">
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">Lisa de Vries</div>
+                            <div class="list-item-subtitle">Vandaag 14:23 • +31 6 1234 5678</div>
+                        </div>
+                        <div class="list-item-badge badge-urgent">Gemist</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">Onbekend nummer</div>
+                            <div class="list-item-subtitle">Gisteren 17:30 • +31 6 9876 5432</div>
+                        </div>
+                        <div class="list-item-badge badge-urgent">Gemist</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">ING Bank</div>
+                            <div class="list-item-subtitle">2 dagen geleden • 0900-0024</div>
+                        </div>
+                        <div class="list-item-badge badge-urgent">Gemist</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CALENDAR PAGE -->
+        <div id="page-calendar" class="page">
+            <div class="header">
+                <h1>Kalender</h1>
+                <div class="date">Deze week</div>
             </div>
 
             <div class="section">
                 <div class="section-title">
-                    <span>🎉</span>
-                    <span>Je dashboard is klaar!</span>
+                    <span>📆</span>
+                    <span>Maandag 11 nov</span>
                 </div>
-                <p style="color: var(--text-secondary); line-height: 1.6;">
-                    Dit is je complete dashboard met 7 features:
-                    <br><br>
-                    📅 Kalender - Afspraken overzicht<br>
-                    💰 Betalingen - Financieel beheer<br>
-                    📧 Emails - Met AI samenvatting<br>
-                    🎤 Voice - Ingesproken berichten<br>
-                    📞 Calls - Gesprekken historie<br>
-                    ☁️ iCloud - Document zoeken<br>
-                    <br>
-                    Gebruik de navigatie onderaan om tussen pagina's te wisselen!
-                </p>
+                <div class="list">
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">09:00 - Team meeting</div>
+                            <div class="list-item-subtitle">Kantoor • 1 uur</div>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">14:00 - Lunch client</div>
+                            <div class="list-item-subtitle">Restaurant</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">
+                    <span>📆</span>
+                    <span>Dinsdag 12 nov</span>
+                </div>
+                <div class="list">
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">10:00 - Dokter</div>
+                            <div class="list-item-subtitle">Huisartspraktijk</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Andere paginas kunnen hier toegevoegd worden -->
+        <!-- PAYMENTS PAGE -->
+        <div id="page-payments" class="page">
+            <div class="header">
+                <h1>Betalingen</h1>
+                <div class="date">Overzicht</div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">
+                    <span>⚠️</span>
+                    <span>Te betalen (2)</span>
+                </div>
+                <div class="list">
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">Huur november</div>
+                            <div class="list-item-subtitle">€1.250 • Vervalt 12 nov • NL91ABNA0417164300</div>
+                        </div>
+                        <div class="list-item-badge badge-urgent">Urgent</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">Energierekening</div>
+                            <div class="list-item-subtitle">€125,50 • Vervalt 15 nov • NL44INGB0001234567</div>
+                        </div>
+                        <div class="list-item-badge badge-soon">Binnenkort</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="section">
+                <div class="section-title">
+                    <span>✅</span>
+                    <span>Betaald (2)</span>
+                </div>
+                <div class="list">
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">Huur oktober</div>
+                            <div class="list-item-subtitle">€1.250 • Betaald 01 nov</div>
+                        </div>
+                        <div class="list-item-badge badge-done">Betaald</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">Zorgverzekering</div>
+                            <div class="list-item-subtitle">€125 • Betaald 05 nov</div>
+                        </div>
+                        <div class="list-item-badge badge-done">Betaald</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EMAILS PAGE -->
+        <div id="page-emails" class="page">
+            <div class="header">
+                <h1>Emails</h1>
+                <div class="date">Inbox</div>
+            </div>
+
+            <div class="section">
+                <div class="list">
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">📦 Pakket onderweg - PostNL</div>
+                            <div class="list-item-subtitle">Vandaag 09:23 • Bezorging morgen 10:00-14:00</div>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">💳 Factuur november - KPN</div>
+                            <div class="list-item-subtitle">Vandaag 14:15 • Totaalbedrag €65,00</div>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">🏦 Maandoverzicht - ING Bank</div>
+                            <div class="list-item-subtitle">Gisteren 08:00 • Oktober €2.450 uitgegeven</div>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">📅 Meeting reminder - Team</div>
+                            <div class="list-item-subtitle">Gisteren 16:45 • Morgen 10:00</div>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">✈️ Bevestiging - KLM</div>
+                            <div class="list-item-subtitle">4 dagen geleden • Barcelona 15 dec</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VOICE PAGE -->
+        <div id="page-voice" class="page">
+            <div class="header">
+                <h1>Voice Berichten</h1>
+                <div class="date">Ingesproken notities</div>
+            </div>
+
+            <div class="section">
+                <div class="list">
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">🎤 Meeting notities team sync</div>
+                            <div class="list-item-subtitle">Vandaag 16:45 • 2:34 • Werk</div>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">🎤 Boodschappen lijst weekend</div>
+                            <div class="list-item-subtitle">Gisteren 10:20 • 1:12 • Persoonlijk</div>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">🎤 Idee nieuwe feature</div>
+                            <div class="list-item-subtitle">3 dagen geleden • 0:45 • Ideeën</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CALLS PAGE -->
+        <div id="page-calls" class="page">
+            <div class="header">
+                <h1>Gesprekken</h1>
+                <div class="date">Call history</div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Inkomend</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Uitgaand</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Gemist</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">
+                    <span>📞</span>
+                    <span>Recent</span>
+                </div>
+                <div class="list">
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">Lisa de Vries</div>
+                            <div class="list-item-subtitle">Vandaag 14:23 • Gemist</div>
+                        </div>
+                        <div class="list-item-badge badge-urgent">Gemist</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">PostNL</div>
+                            <div class="list-item-subtitle">Vandaag 11:45 • 3:24 • Inkomend</div>
+                        </div>
+                        <div class="list-item-badge badge-done">Beantwoord</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">KPN Klantenservice</div>
+                            <div class="list-item-subtitle">Vandaag 09:12 • 12:08 • Uitgaand</div>
+                        </div>
+                        <div class="list-item-badge badge-info">Uitgaand</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ICLOUD PAGE -->
+        <div id="page-icloud" class="page">
+            <div class="header">
+                <h1>iCloud</h1>
+                <div class="date">Ramon map</div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">
+                    <span>📁</span>
+                    <span>Recent</span>
+                </div>
+                <div class="list">
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">📊 Facturen 2025.xlsx</div>
+                            <div class="list-item-subtitle">Financieel • 245 KB • 2 dagen geleden</div>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">📄 Contract Huur.pdf</div>
+                            <div class="list-item-subtitle">Documenten • 1.2 MB • 5 dagen geleden</div>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="list-item-title">🖼️ ID Scan.jpg</div>
+                            <div class="list-item-subtitle">Persoonlijk • 890 KB • 1 week geleden</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Bottom Navigation -->
+    <!-- Navigation -->
     <div class="navigation">
-        <button class="nav-btn active" onclick="alert('Home')">🏠</button>
-        <button class="nav-btn" onclick="alert('Kalender')">📅</button>
-        <button class="nav-btn" onclick="alert('Betalingen')">💰</button>
-        <button class="nav-btn" onclick="alert('Emails')">📧</button>
-        <button class="nav-btn" onclick="alert('Voice')">🎤</button>
-        <button class="nav-btn" onclick="alert('Calls')">📞</button>
-        <button class="nav-btn" onclick="alert('iCloud')">☁️</button>
+        <button class="nav-btn active" onclick="showPage('home')">🏠</button>
+        <button class="nav-btn" onclick="showPage('calendar')">📅</button>
+        <button class="nav-btn" onclick="showPage('payments')">💰</button>
+        <button class="nav-btn" onclick="showPage('emails')">📧</button>
+        <button class="nav-btn" onclick="showPage('voice')">🎤</button>
+        <button class="nav-btn" onclick="showPage('calls')">📞</button>
+        <button class="nav-btn" onclick="showPage('icloud')">☁️</button>
     </div>
 
     <script>
-        // Jouw JavaScript functies komen hier
-        console.log('Dashboard geladen!');
+        function showPage(pageName) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + pageName).classList.add('active');
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     </script>
 </body>
 </html>
