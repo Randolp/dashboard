@@ -720,14 +720,43 @@
             `;
         }
 
+        // Get Label ID by name
+        async function getLabelId(labelName) {
+            try {
+                const response = await fetch(
+                    'https://www.googleapis.com/gmail/v1/users/me/labels',
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`
+                        }
+                    }
+                );
+                const data = await response.json();
+                const label = data.labels.find(l => l.name === labelName);
+                return label ? label.id : null;
+            } catch (error) {
+                console.error('Error fetching labels:', error);
+                return null;
+            }
+        }
+
         // Load Gmail Messages
         async function loadGmailMessages() {
             if (!accessToken) return;
 
             try {
-                // Filter for emails with label "Ramon_J"
+                // First get the label ID for "Ramon J."
+                const labelId = await getLabelId('Ramon J.');
+                
+                if (!labelId) {
+                    showEmptyState('email-list', 'Label "Ramon J." niet gevonden in Gmail');
+                    document.getElementById('stat-emails').textContent = '0';
+                    return;
+                }
+
+                // Now fetch emails with this label
                 const response = await fetch(
-                    'https://www.googleapis.com/gmail/v1/users/me/messages?maxResults=20&labelIds=Ramon_J',
+                    `https://www.googleapis.com/gmail/v1/users/me/messages?maxResults=20&labelIds=${labelId}`,
                     {
                         headers: {
                             'Authorization': `Bearer ${accessToken}`
@@ -741,7 +770,7 @@
                     loadMessageDetails(data.messages);
                     document.getElementById('stat-emails').textContent = data.messages.length;
                 } else {
-                    showEmptyState('email-list', 'Geen emails met label "Ramon_J"');
+                    showEmptyState('email-list', 'Geen emails met label "Ramon J."');
                     document.getElementById('stat-emails').textContent = '0';
                 }
             } catch (error) {
