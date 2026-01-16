@@ -745,11 +745,11 @@
             if (!accessToken) return;
 
             try {
-                // First get the label ID for "Ramon J."
-                const labelId = await getLabelId('Ramon J.');
+                // First get the label ID for "Ramon_J"
+                const labelId = await getLabelId('Ramon_J');
                 
                 if (!labelId) {
-                    showEmptyState('email-list', 'Label "Ramon J." niet gevonden in Gmail');
+                    showEmptyState('email-list', 'Label "Ramon_J" niet gevonden in Gmail');
                     document.getElementById('stat-emails').textContent = '0';
                     return;
                 }
@@ -770,7 +770,7 @@
                     loadMessageDetails(data.messages);
                     document.getElementById('stat-emails').textContent = data.messages.length;
                 } else {
-                    showEmptyState('email-list', 'Geen emails met label "Ramon J."');
+                    showEmptyState('email-list', 'Geen emails met label "Ramon_J"');
                     document.getElementById('stat-emails').textContent = '0';
                 }
             } catch (error) {
