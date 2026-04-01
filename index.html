@@ -726,6 +726,10 @@
         const CLIENT_ID = '463075969592-sadki16gqe1c5tbibf8b765ttdsu64ji.apps.googleusercontent.com';
         const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/gmail.modify';
         
+        // Kalender IDs
+        const CALENDAR_PRIMARY = 'primary';
+        const CALENDAR_RAMON_J = 'a4kjahp4mpnc5ti7encm9484kbrk4h62@import.calendar.google.com';
+
         let tokenClient;
         let accessToken = null;
         let allCalendarEvents = [];
@@ -779,21 +783,42 @@
             document.getElementById('current-date').textContent = capitalizedDate;
         }
 
+        // ── AANGEPAST: haalt nu zowel primary als Ramon_J kalender op ──
         async function loadCalendarEvents() {
             if (!accessToken) return;
             try {
                 const now = new Date();
                 const twoWeeksAhead = new Date();
                 twoWeeksAhead.setDate(twoWeeksAhead.getDate() + 14);
-                const response = await fetch(
-                    `https://www.googleapis.com/calendar/v3/calendars/primary/events?` +
-                    `timeMin=${now.toISOString()}&timeMax=${twoWeeksAhead.toISOString()}&singleEvents=true&orderBy=startTime&maxResults=50`,
-                    { headers: { 'Authorization': `Bearer ${accessToken}` } }
-                );
-                const data = await response.json();
-                if (data.items) {
-                    displayCalendarEvents(data.items);
-                    document.getElementById('stat-calendar').textContent = data.items.length;
+
+                const params = `timeMin=${now.toISOString()}&timeMax=${twoWeeksAhead.toISOString()}&singleEvents=true&orderBy=startTime&maxResults=50`;
+
+                const [primaryRes, ramonRes] = await Promise.all([
+                    fetch(
+                        `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_PRIMARY)}/events?${params}`,
+                        { headers: { 'Authorization': `Bearer ${accessToken}` } }
+                    ),
+                    fetch(
+                        `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_RAMON_J)}/events?${params}`,
+                        { headers: { 'Authorization': `Bearer ${accessToken}` } }
+                    )
+                ]);
+
+                const primaryData = await primaryRes.json();
+                const ramonData = await ramonRes.json();
+
+                const allEvents = [
+                    ...(primaryData.items || []),
+                    ...(ramonData.items || [])
+                ].sort((a, b) => {
+                    const dateA = new Date(a.start.dateTime || a.start.date);
+                    const dateB = new Date(b.start.dateTime || b.start.date);
+                    return dateA - dateB;
+                });
+
+                if (allEvents.length > 0) {
+                    displayCalendarEvents(allEvents);
+                    document.getElementById('stat-calendar').textContent = allEvents.length;
                 } else {
                     showEmptyState('calendar-list', 'Geen afspraken gevonden');
                     document.getElementById('stat-calendar').textContent = '0';
@@ -873,7 +898,6 @@
                     document.getElementById('stat-emails').textContent = '0';
                     return;
                 }
-                // Only fetch UNREAD emails with Ramon_J label, max 15
                 const response = await fetch(
                     `https://www.googleapis.com/gmail/v1/users/me/messages?maxResults=15&labelIds=${labelId}&labelIds=UNREAD`,
                     { headers: { 'Authorization': `Bearer ${accessToken}` } }
@@ -914,7 +938,6 @@
             fullEmails.innerHTML = '<div class="list">' + messages.map(msg => createEmailItem(msg)).join('') + '</div>';
         }
 
-        // Mark email as read via Gmail API
         async function markAsRead(messageId, event) {
             event.stopPropagation();
             try {
@@ -929,7 +952,6 @@
                         body: JSON.stringify({ removeLabelIds: ['UNREAD'] })
                     }
                 );
-                // Remove from DOM instantly
                 const item = document.getElementById('email-' + messageId);
                 if (item) {
                     item.style.transition = 'opacity 0.3s, max-height 0.3s';
@@ -938,7 +960,6 @@
                     item.style.overflow = 'hidden';
                     setTimeout(() => {
                         item.remove();
-                        // Update counter
                         const remaining = document.querySelectorAll('#email-list .list-item').length;
                         document.getElementById('stat-emails').textContent = remaining;
                         if (remaining === 0) showEmptyState('email-list', 'Geen ongelezen emails');
